@@ -1,0 +1,65 @@
+#!/bin/sh
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+echo $SCRIPTPATH
+
+usage="$(basename "$0") [command ...] -- useful tool for building, testing and running this application in local environment
+
+available commands:
+   compile                       Clean, compile but do not run tests
+   unit                          Run unit tests
+   run                           Compile, install and run the application
+   stop                          Stop the application
+   bdd                           Run Serenity BDDs
+   pre_commit                    Run this before pushing the code
+  "
+
+if [ $# -eq 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+     echo "$usage"
+          exit 1
+fi
+
+function compile {
+    echo 'Compiling gradle project'
+    ./gradlew :news-article-service:clean :news-article-service-acceptance:clean :news-article-service:build -x test --info
+}
+
+function run {
+    echo "starting the application"
+    export RANDOM_PORT=$SERVER_PORT
+    compile
+    stop
+    gradle :news-article-service:bootRun &
+    sleep 25
+}
+
+function stop {
+    echo 'Stopping the application'
+    gradle --stop
+}
+
+function unit {
+    echo 'Running unit tests'
+    compile
+    gradle :news-article-service:test --info
+}
+
+function bdd {
+	echo 'Running Bdd tests'
+	stop
+	run
+    gradle :news-article-service-acceptance:test aggregate -Dapp.host=localhost -Dapp.port=$SERVER_PORT --info
+}
+
+function pre_commit {
+   compile
+   unit
+   stop
+   run
+   bdd
+}
+
+for command in "$@"
+do
+    $command
+done
