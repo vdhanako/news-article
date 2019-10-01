@@ -1,0 +1,19 @@
+subprojects {
+
+	apply plugin: 'java'
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.9')
+	}
+
+}

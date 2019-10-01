@@ -1,0 +1,3 @@
+rootProject.name = "news-article"
+include "news-article-service"
+include "news-article-service-acceptance"
