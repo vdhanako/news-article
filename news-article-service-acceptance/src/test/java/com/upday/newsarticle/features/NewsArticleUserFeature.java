@@ -8,6 +8,8 @@ import net.thucydides.core.annotations.Title;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.sql.Date;
+
 @RunWith(SerenityRunner.class)
 public class NewsArticleUserFeature extends AcceptanceTestBase {
 
@@ -33,7 +35,7 @@ public class NewsArticleUserFeature extends AcceptanceTestBase {
     }
 
     @Test
-    @Title("A user should be able to see view all article for a given author")
+    @Title("A user should be able to view all article for a given author")
     public void a_user_should_be_able_to_view_all_articles_for_a_given_author() {
         String requestUrl = String.format(getBaseUrl(), "article/author/1");
         newsArticleUserSteps.given_a_user_has_a_get_article_for_author_id_endpoint(requestUrl);
@@ -42,11 +44,20 @@ public class NewsArticleUserFeature extends AcceptanceTestBase {
     }
 
     @Test
-    @Title("A user should be able to see view all article for a specific keyword")
+    @Title("A user should be able to view all article for a specific keyword")
     public void a_user_should_be_able_to_view_all_articles_for_a_specific_keyword() {
         String requestUrl = String.format(getBaseUrl(), "article/author/1");
         newsArticleUserSteps.given_a_user_has_a_get_article_for_keyword_endpoint(requestUrl);
         newsArticleUserSteps.when_user_tries_to_get_all_articles_for_the_keyword(requestUrl, "some");
         newsArticleUserSteps.then_user_should_be_able_to_view_all_articles_with_that_keyword_successfully();
+    }
+
+    @Test
+    @Title("A user should be able to view all article for a given period")
+    public void a_user_should_be_able_to_view_all_articles_for_a_given_period() {
+        String requestUrl = String.format(getBaseUrl(), "article/date/from/2019-10-02/to/2019-10-03");
+        newsArticleUserSteps.given_a_user_has_a_get_between_a_period_endpoint(requestUrl);
+        newsArticleUserSteps.when_user_tries_to_get_all_articles_for_the_dates(requestUrl, "2019-10-02", "2019-10-03");
+        newsArticleUserSteps.then_user_should_be_able_to_view_all_articles_between_those_dates_successfully();
     }
 }

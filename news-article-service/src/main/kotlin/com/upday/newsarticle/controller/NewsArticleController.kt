@@ -3,10 +3,12 @@ package com.upday.newsarticle.controller
 import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.service.api.NewsArticleService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
 import org.springframework.http.MediaType.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/article")
@@ -36,6 +38,13 @@ class NewsArticleController {
     @GetMapping("/keyword/{keyword}", produces = [APPLICATION_JSON_UTF8_VALUE])
     fun getArticleByKeyword(@PathVariable("keyword") keyword: String) : ResponseEntity<List<Article>> {
         val response = newsArticleService.getArticleByKeyword(keyword)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/date/from/{from}/to/{to}", produces = [APPLICATION_JSON_UTF8_VALUE])
+    fun getArticleByPeriod(@PathVariable("from") @DateTimeFormat(pattern="yyyy-MM-dd") from: Date,
+                           @PathVariable("to") @DateTimeFormat(pattern="yyyy-MM-dd") to: Date) : ResponseEntity<List<Article>> {
+        val response: List<Article> = newsArticleService.getArticleByPeriod(java.sql.Date(from.time), java.sql.Date(to.time))
         return ResponseEntity.ok(response)
     }
 

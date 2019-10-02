@@ -23,14 +23,14 @@ class ArticleRepositoryTest {
 
     @Test
     fun `get all articles`() {
-        var response = repository.findAll()
+        val response = repository.findAll()
 
         assertThat(response.size, `is`(equalTo(3)))
     }
 
     @Test
     fun `get one article by id`() {
-        var response = repository.findById(1)
+        val response = repository.findById(1)
 
         assertThat(response.get().articleId, `is`(equalTo(1L)))
         assertThat(response.get().header, `is`(equalTo("some header")))
@@ -43,8 +43,8 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    fun `get one article by author`() {
-        var response = repository.findByAuthor(1)
+    fun `get articles by author`() {
+        val response = repository.findByAuthor(1)
 
         assertThat(response.get(0).articleId, `is`(equalTo(1L)))
         assertThat(response.get(0).header, `is`(equalTo("some header")))
@@ -57,8 +57,8 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    fun `get one article for a keyword`() {
-        var response = repository.findByKeyword("some")
+    fun `get articles for a keyword`() {
+        val response = repository.findByKeyword("some")
 
         assertThat(response.get(0).articleId, `is`(equalTo(1L)))
         assertThat(response.get(0).header, `is`(equalTo("some header")))
@@ -72,12 +72,12 @@ class ArticleRepositoryTest {
 
     @Test
     fun `create and delete one article for a keyword`() {
-        var date = Date(2019,10,1)
-        var authorEntity = AuthorEntity(2, "robert")
-        var keywords = mutableSetOf("some")
-        var articleEntity = ArticleEntity(4, "some header", "some description", "some text", date, authorEntity, keywords)
+        val date = Date(2019,10,1)
+        val authorEntity = AuthorEntity(2, "robert")
+        val keywords = mutableSetOf("some")
+        val articleEntity = ArticleEntity(4, "some header", "some description", "some text", date, authorEntity, keywords)
 
-        var response = repository.save(articleEntity)
+        val response = repository.save(articleEntity)
 
         assertThat(response.articleId, `is`(equalTo(4L)))
         assertThat(response.header, `is`(equalTo("some header")))

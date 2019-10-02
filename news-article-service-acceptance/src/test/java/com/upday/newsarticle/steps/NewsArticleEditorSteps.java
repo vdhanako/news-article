@@ -39,7 +39,7 @@ public class NewsArticleEditorSteps {
         return requestUrl;
     }
 
-    @Step("When editor tries to update existing article id {1}")
+    @Step("When editor tries to update existing article id")
     public Response when_editor_tries_to_update_existing_article(String requestUrl, String requestBody) {
         return rest().when().header("content-type", "application/json").body(requestBody).put(requestUrl);
     }

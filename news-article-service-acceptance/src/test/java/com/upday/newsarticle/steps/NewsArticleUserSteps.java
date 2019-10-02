@@ -103,4 +103,21 @@ public class NewsArticleUserSteps {
         then().assertThat().body("[0].keywords[0]", is(equalTo("some")));
     }
 
+    @Step("Given a user has a get article between a period endpoint")
+    public String given_a_user_has_a_get_between_a_period_endpoint(String requestUrl) {
+        return requestUrl;
+    }
+
+    @Step("When user tries to get all articles between that period {1} and {2}")
+    public Response when_user_tries_to_get_all_articles_for_the_dates(String requestUrl, String from, String to) {
+        return rest().when().get(requestUrl);
+    }
+
+    @Step("Then user should be able to view all articles between those dates successfully")
+    public void then_user_should_be_able_to_view_all_articles_between_those_dates_successfully() {
+        then().assertThat().statusCode(is(equalTo (200)));
+        then().assertThat().body("[0].articleId", is(equalTo(3)));
+        then().assertThat().body("[0].publishDate", is(equalTo("2019-10-02")));
+    }
+
 }

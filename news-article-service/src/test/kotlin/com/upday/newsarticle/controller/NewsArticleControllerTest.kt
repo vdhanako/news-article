@@ -1,6 +1,7 @@
 package com.upday.newsarticle.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import com.upday.newsarticle.controller.advice.ArticleNotCreationExceptionAdvice
 import com.upday.newsarticle.controller.advice.ArticleNotFoundExceptionAdvice
@@ -113,6 +114,22 @@ class NewsArticleControllerTest {
         whenever(service.getArticleByKeyword("some")).thenReturn(articles)
 
         mockMvc.perform(MockMvcRequestBuilders.get("/article/keyword/some"))
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("[0].articleId").value(1))
+                .andExpect(jsonPath("[0].header").value("some header"))
+                .andExpect(jsonPath("[0].shortDescription").value("some description"))
+                .andExpect(jsonPath("[0].text").value("some text"))
+                .andExpect(jsonPath("[0].publishDate").exists())
+                .andExpect(jsonPath("[0].author.authorId").value(1))
+                .andExpect(jsonPath("[0].author.authorName").value("some author"))
+                .andExpect(jsonPath("[0].keywords.[0]").value("some"))
+    }
+
+    @Test
+    fun `getArticleByPeriod should return success status and get articles between two dates`() {
+        whenever(service.getArticleByPeriod(any(), any())).thenReturn(articles)
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/article/date/from/2019-09-30/to/2019-10-01"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("[0].articleId").value(1))
                 .andExpect(jsonPath("[0].header").value("some header"))
