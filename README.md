@@ -104,7 +104,8 @@ http://localhost:8080/h2-console/
 
 - Have multiple authors attached to an article - which is currently one author per article
 - Add javax validation for controller inputs instead of relying on default entity field validation
-- Containerize the service if required
+- Document db could be a better fit for this kind of a use case and can be used
+- Containerize the service if required - will be required in case of attaching a document db container for testing as mentioned above
 - Handle performance testing using any testing tools like Gatling, Jmeter
 - Integrate a CI tool such as circle ci scripts in place for code pull, build and test
 - Add swagger descriptions to the services
