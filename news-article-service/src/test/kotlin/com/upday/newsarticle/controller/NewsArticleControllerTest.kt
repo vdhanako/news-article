@@ -3,7 +3,7 @@ package com.upday.newsarticle.controller
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
-import com.upday.newsarticle.controller.advice.ArticleNotCreationExceptionAdvice
+import com.upday.newsarticle.controller.advice.ArticleCreationExceptionAdvice
 import com.upday.newsarticle.controller.advice.ArticleNotFoundExceptionAdvice
 import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.domain.Author
@@ -16,10 +16,10 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.*
 import java.sql.Date
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
@@ -32,7 +32,7 @@ class NewsArticleControllerTest {
     @Mock
     private lateinit var service: NewsArticleService
 
-    lateinit var mockMvc: MockMvc
+    private lateinit var mockMvc: MockMvc
 
     private var objectMapper = jacksonObjectMapper()
 
@@ -49,7 +49,7 @@ class NewsArticleControllerTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(
-                        ArticleNotCreationExceptionAdvice(),
+                        ArticleCreationExceptionAdvice(),
                         ArticleNotFoundExceptionAdvice()).build()
     }
 
@@ -57,7 +57,7 @@ class NewsArticleControllerTest {
     fun `getAllArticles should get all articles`() {
         whenever(service.getAllArticles()).thenReturn(articles)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article"))
+        mockMvc.perform(get("/article"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("[0].articleId").value(1))
                 .andExpect(jsonPath("[0].header").value("some header"))
@@ -73,7 +73,7 @@ class NewsArticleControllerTest {
     fun `getArticle should return success status and get an article for valid article id`() {
         whenever(service.getArticle(1)).thenReturn(article)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/1"))
+        mockMvc.perform(get("/article/1"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("articleId").value(1))
                 .andExpect(jsonPath("header").value("some header"))
@@ -89,7 +89,7 @@ class NewsArticleControllerTest {
     fun `getArticle should return not found status for invalid article id`() {
         whenever(service.getArticle(1)).thenThrow(ArticleNotFoundException(""))
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/1"))
+        mockMvc.perform(get("/article/1"))
                 .andExpect(status().isNotFound)
     }
 
@@ -97,7 +97,7 @@ class NewsArticleControllerTest {
     fun `getArticleByAuthor should return success status and get articles for valid author id`() {
         whenever(service.getArticleByAuthor(1)).thenReturn(articles)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/author/1"))
+        mockMvc.perform(get("/article/author/1"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("[0].articleId").value(1))
                 .andExpect(jsonPath("[0].header").value("some header"))
@@ -113,7 +113,7 @@ class NewsArticleControllerTest {
     fun `getArticleByKeyword should return success status and get articles for a specific keyword`() {
         whenever(service.getArticleByKeyword("some")).thenReturn(articles)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/keyword/some"))
+        mockMvc.perform(get("/article/keyword/some"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("[0].articleId").value(1))
                 .andExpect(jsonPath("[0].header").value("some header"))
@@ -129,7 +129,7 @@ class NewsArticleControllerTest {
     fun `getArticleByPeriod should return success status and get articles between two dates`() {
         whenever(service.getArticleByPeriod(any(), any())).thenReturn(articles)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/article/date/from/2019-09-30/to/2019-10-01"))
+        mockMvc.perform(get("/article/date/from/2019-09-30/to/2019-10-01"))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("[0].articleId").value(1))
                 .andExpect(jsonPath("[0].header").value("some header"))
@@ -147,8 +147,8 @@ class NewsArticleControllerTest {
 
         var requestJson = objectMapper.writeValueAsString(article)
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/article")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/article")
+                .contentType(APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("articleId").value(1))
@@ -167,8 +167,8 @@ class NewsArticleControllerTest {
 
         var requestJson = objectMapper.writeValueAsString(article)
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/article")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/article")
+                .contentType(APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isNotFound)
     }
@@ -179,8 +179,8 @@ class NewsArticleControllerTest {
 
         var requestJson = objectMapper.writeValueAsString(article)
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/article")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/article")
+                .contentType(APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("articleId").value(1))
@@ -199,15 +199,15 @@ class NewsArticleControllerTest {
 
         var requestJson = objectMapper.writeValueAsString(article)
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/article")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/article")
+                .contentType(APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isNotFound)
     }
 
     @Test
     fun `deleteArticle should return success status and delete an article for a valid article id`() {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/article/1"))
+        mockMvc.perform(delete("/article/1"))
                 .andExpect(status().isOk)
     }
 
@@ -215,7 +215,7 @@ class NewsArticleControllerTest {
     fun `deleteArticle should return not found status and should not delete an article for invalid article id`() {
         whenever(service.deleteArticle(1)).thenThrow(ArticleNotFoundException(""))
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/article/1"))
+        mockMvc.perform(delete("/article/1"))
                 .andExpect(status().isNotFound)
     }
 

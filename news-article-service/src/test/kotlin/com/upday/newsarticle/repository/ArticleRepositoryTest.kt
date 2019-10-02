@@ -46,28 +46,28 @@ class ArticleRepositoryTest {
     fun `get articles by author`() {
         val response = repository.findByAuthor(1)
 
-        assertThat(response.get(0).articleId, `is`(equalTo(1L)))
-        assertThat(response.get(0).header, `is`(equalTo("some header")))
-        assertThat(response.get(0).shortDescription, `is`(equalTo("some description")))
-        assertThat(response.get(0).text, `is`(equalTo("some text")))
-        assertThat(response.get(0).publishDate, `is`(notNullValue()))
-        assertThat(response.get(0).author.authorId, `is`(equalTo(1L)))
-        assertThat(response.get(0).author.authorName, `is`(equalTo("venkat")))
-        assertThat(response.get(0).keywords?.first(), `is`(equalTo("some")))
+        assertThat(response[0].articleId, `is`(equalTo(1L)))
+        assertThat(response[0].header, `is`(equalTo("some header")))
+        assertThat(response[0].shortDescription, `is`(equalTo("some description")))
+        assertThat(response[0].text, `is`(equalTo("some text")))
+        assertThat(response[0].publishDate, `is`(notNullValue()))
+        assertThat(response[0].author.authorId, `is`(equalTo(1L)))
+        assertThat(response[0].author.authorName, `is`(equalTo("venkat")))
+        assertThat(response[0].keywords?.first(), `is`(equalTo("some")))
     }
 
     @Test
     fun `get articles for a keyword`() {
         val response = repository.findByKeyword("some")
 
-        assertThat(response.get(0).articleId, `is`(equalTo(1L)))
-        assertThat(response.get(0).header, `is`(equalTo("some header")))
-        assertThat(response.get(0).shortDescription, `is`(equalTo("some description")))
-        assertThat(response.get(0).text, `is`(equalTo("some text")))
-        assertThat(response.get(0).publishDate, `is`(notNullValue()))
-        assertThat(response.get(0).author.authorId, `is`(equalTo(1L)))
-        assertThat(response.get(0).author.authorName, `is`(equalTo("venkat")))
-        assertThat(response.get(0).keywords?.first(), `is`(equalTo("some")))
+        assertThat(response[0].articleId, `is`(equalTo(1L)))
+        assertThat(response[0].header, `is`(equalTo("some header")))
+        assertThat(response[0].shortDescription, `is`(equalTo("some description")))
+        assertThat(response[0].text, `is`(equalTo("some text")))
+        assertThat(response[0].publishDate, `is`(notNullValue()))
+        assertThat(response[0].author.authorId, `is`(equalTo(1L)))
+        assertThat(response[0].author.authorName, `is`(equalTo("venkat")))
+        assertThat(response[0].keywords?.first(), `is`(equalTo("some")))
     }
 
     @Test

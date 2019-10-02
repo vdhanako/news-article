@@ -34,8 +34,8 @@ public class NewsArticleUserSteps {
         then().assertThat().body("[0].keywords[0]", is(equalTo("some")));
     }
 
-    @Step("Given a user has a get article for article id endpoint")
-    public String given_a_user_has_a_get_article_for_article_id_endpoint(String requestUrl) {
+    @Step("Given a user has a get article by id endpoint")
+    public String given_a_user_has_a_get_article_by_id_endpoint(String requestUrl) {
         return requestUrl;
     }
 
@@ -58,7 +58,7 @@ public class NewsArticleUserSteps {
     }
 
     @Step("Given a user has a get article for author id endpoint")
-    public String given_a_user_has_a_get_article_for_author_id_endpoint(String requestUrl) {
+    public String given_a_user_has_a_get_article_by_author_id_endpoint(String requestUrl) {
         return requestUrl;
     }
 
@@ -80,8 +80,8 @@ public class NewsArticleUserSteps {
         then().assertThat().body("[0].keywords[0]", is(equalTo("some")));
     }
 
-    @Step("Given a user has a get article for keyword endpoint")
-    public String given_a_user_has_a_get_article_for_keyword_endpoint(String requestUrl) {
+    @Step("Given a user has a get article by keyword endpoint")
+    public String given_a_user_has_a_get_article_by_keyword_endpoint(String requestUrl) {
         return requestUrl;
     }
 
@@ -104,7 +104,7 @@ public class NewsArticleUserSteps {
     }
 
     @Step("Given a user has a get article between a period endpoint")
-    public String given_a_user_has_a_get_between_a_period_endpoint(String requestUrl) {
+    public String given_a_user_has_a_get_article_between_a_period_endpoint(String requestUrl) {
         return requestUrl;
     }
 

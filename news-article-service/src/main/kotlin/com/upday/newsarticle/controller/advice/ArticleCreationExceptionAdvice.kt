@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ControllerAdvice
-class ArticleNotCreationExceptionAdvice {
+class ArticleCreationExceptionAdvice {
 
     @ExceptionHandler(ArticleCreationException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun articleNotCreated(ex: ArticleCreationException): ResponseEntity<*> {
+    fun articleCreation(ex: ArticleCreationException): ResponseEntity<ErrorMessage> {
         val response = ErrorMessage(ex.message)
         return ResponseEntity(response, HttpStatus.NOT_FOUND)
     }

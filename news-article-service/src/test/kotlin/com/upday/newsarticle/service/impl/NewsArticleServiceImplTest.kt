@@ -24,13 +24,13 @@ import java.util.*
 class NewsArticleServiceImplTest {
 
     @InjectMocks
-    lateinit var service: NewsArticleServiceImpl
+    private lateinit var service: NewsArticleServiceImpl
 
     @Mock
-    lateinit var repository: ArticleRepository
+    private lateinit var repository: ArticleRepository
 
     @Mock
-    lateinit var articleObjectMapper: ArticleObjectMapper
+    private lateinit var articleObjectMapper: ArticleObjectMapper
 
     private lateinit var articleEntity: ArticleEntity
     private lateinit var article: Article
@@ -40,12 +40,12 @@ class NewsArticleServiceImplTest {
 
     @Before
     fun setup() {
-        var date = Date(2019,10,1)
+        val date = Date(2019,10,1)
 
-        var author = Author(1, "some author")
-        var authorEntity = AuthorEntity(1, "some author")
+        val author = Author(1, "some author")
+        val authorEntity = AuthorEntity(1, "some author")
 
-        var keywords = mutableSetOf("some")
+        val keywords = mutableSetOf("some")
 
         article = Article(1, "some header", "some description", "some text", date, author, keywords)
         articles = mutableListOf(article)
@@ -59,7 +59,7 @@ class NewsArticleServiceImplTest {
         whenever(repository.findAll()).thenReturn(articleEntities)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.getAllArticles()
+        val response = service.getAllArticles()
 
         assertThat(response.size, `is`(equalTo(1)))
         assertThat(response[0].articleId, `is`(equalTo(1L)))
@@ -77,7 +77,7 @@ class NewsArticleServiceImplTest {
         whenever(repository.findById(1)).thenReturn(Optional.of(articleEntity))
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.getArticle(1)
+        val response = service.getArticle(1)
 
         assertThat(response.articleId, `is`(equalTo(1L)))
         assertThat(response.header, `is`(equalTo("some header")))
@@ -101,7 +101,7 @@ class NewsArticleServiceImplTest {
         whenever(repository.findByAuthor(1)).thenReturn(articleEntities)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.getArticleByAuthor(1)
+        val response = service.getArticleByAuthor(1)
 
         assertThat(response.size, `is`(equalTo(1)))
         assertThat(response[0].articleId, `is`(equalTo(1L)))
@@ -119,7 +119,7 @@ class NewsArticleServiceImplTest {
         whenever(repository.findByAuthor(1)).thenReturn(articleEntities)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.getArticleByAuthor(1)
+        val response = service.getArticleByAuthor(1)
 
         assertThat(response.size, `is`(equalTo(1)))
         assertThat(response[0].articleId, `is`(equalTo(1L)))
@@ -139,7 +139,7 @@ class NewsArticleServiceImplTest {
         whenever(repository.findByPeriod(from, to)).thenReturn(articleEntities)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.getArticleByPeriod(from, to)
+        val response = service.getArticleByPeriod(from, to)
 
         assertThat(response.size, `is`(equalTo(1)))
         assertThat(response[0].articleId, `is`(equalTo(1L)))
@@ -159,7 +159,7 @@ class NewsArticleServiceImplTest {
         whenever(articleObjectMapper.fromArticle(article)).thenReturn(articleEntity)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.createArticle(article)
+        val response = service.createArticle(article)
 
         assertThat(response.articleId, `is`(equalTo(1L)))
         assertThat(response.header, `is`(equalTo("some header")))
@@ -184,7 +184,7 @@ class NewsArticleServiceImplTest {
         whenever(articleObjectMapper.fromArticle(article)).thenReturn(articleEntity)
         whenever(articleObjectMapper.toArticle(articleEntity)).thenReturn(article)
 
-        var response = service.updateArticle(article)
+        val response = service.updateArticle(article)
 
         assertThat(response.articleId, `is`(equalTo(1L)))
         assertThat(response.header, `is`(equalTo("some header")))

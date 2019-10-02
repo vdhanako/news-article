@@ -34,12 +34,12 @@ public class NewsArticleEditorSteps {
     }
 
 
-    @Step("Given an editor has a update existing article endpoint")
-    public String given_an_editor_has_a_update_existing_article_endpoint(String requestUrl) {
+    @Step("Given an editor has an update existing article endpoint")
+    public String given_an_editor_has_an_update_existing_article_endpoint(String requestUrl) {
         return requestUrl;
     }
 
-    @Step("When editor tries to update existing article id")
+    @Step("When editor tries to update existing article")
     public Response when_editor_tries_to_update_existing_article(String requestUrl, String requestBody) {
         return rest().when().header("content-type", "application/json").body(requestBody).put(requestUrl);
     }
@@ -57,7 +57,7 @@ public class NewsArticleEditorSteps {
         return requestUrl;
     }
 
-    @Step("When editor tries to delete existing article id {1}")
+    @Step("When editor tries to delete existing article of id {1}")
     public Response when_editor_tries_to_delete_existing_article(String requestUrl, String articleId) {
         return rest().when().delete(requestUrl);
     }

@@ -1,7 +1,6 @@
 package com.upday.newsarticle.service.impl
 
 import com.upday.newsarticle.domain.Article
-import com.upday.newsarticle.entity.ArticleEntity
 import com.upday.newsarticle.exception.ArticleCreationException
 import com.upday.newsarticle.exception.ArticleNotFoundException
 import com.upday.newsarticle.mapper.ArticleObjectMapper
@@ -15,10 +14,10 @@ import java.sql.Date
 class NewsArticleServiceImpl : NewsArticleService {
 
     @Autowired
-    lateinit var articleRepository: ArticleRepository
+    private lateinit var articleRepository: ArticleRepository
 
     @Autowired
-    lateinit var articleObjectMapper: ArticleObjectMapper
+    private lateinit var articleObjectMapper: ArticleObjectMapper
 
     override fun getAllArticles(): List<Article> {
         val articleEntities = articleRepository.findAll()
@@ -27,7 +26,7 @@ class NewsArticleServiceImpl : NewsArticleService {
 
     override fun getArticle(articleId: Long): Article {
         val articleEntity = articleRepository.findById(articleId)
-        if(!articleEntity.isPresent()) {
+        if (!articleEntity.isPresent) {
             throw ArticleNotFoundException("An article with article id $articleId was not found")
         }
         return articleObjectMapper.toArticle(articleEntity.get())
@@ -49,18 +48,18 @@ class NewsArticleServiceImpl : NewsArticleService {
     }
 
     override fun createArticle(article: Article): Article {
-        if(doesArticleExist(article)) {
+        if (doesArticleExist(article)) {
             throw ArticleCreationException("Unable to create article. An article with article id ${article.articleId} already exist")
         }
         val requestArticleEntity = articleObjectMapper.fromArticle(article)
         return try {
-            val response: ArticleEntity = articleRepository.save(requestArticleEntity)
-            return articleObjectMapper.toArticle(response)
+            articleObjectMapper.toArticle(articleRepository.save(requestArticleEntity))
         } catch (e: RuntimeException) {
             throw ArticleCreationException("Problem occurred when trying to create article")
         }
-
     }
+
+    private fun doesArticleExist(article: Article) = articleRepository.existsById(article.articleId)
 
     override fun updateArticle(article: Article): Article {
         val requestArticleEntity = articleObjectMapper.fromArticle(article)
@@ -70,8 +69,6 @@ class NewsArticleServiceImpl : NewsArticleService {
             throw ArticleCreationException("Problem occurred when trying to update article")
         }
     }
-
-    private fun doesArticleExist(article: Article) = articleRepository.existsById(article.articleId)
 
     override fun deleteArticle(articleId: Long) {
         try {

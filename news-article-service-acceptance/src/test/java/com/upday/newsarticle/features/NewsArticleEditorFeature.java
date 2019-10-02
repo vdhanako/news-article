@@ -27,7 +27,7 @@ public class NewsArticleEditorFeature extends AcceptanceTestBase {
     @Title("An editor should be able to update existing article")
     public void an_editor_should_be_able_to_update_existing_article() {
         String requestUrl = String.format(getBaseUrl(), "article");
-        newsArticleEditorSteps.given_an_editor_has_a_update_existing_article_endpoint(requestUrl);
+        newsArticleEditorSteps.given_an_editor_has_an_update_existing_article_endpoint(requestUrl);
         newsArticleEditorSteps.when_editor_tries_to_update_existing_article(requestUrl, "{\"articleId\":2,\"header\":\"some header modified\",\"shortDescription\":\"some description\",\"text\":\"some text\",\"publishDate\":\"2019-10-01\",\"author\":{\"authorId\":1,\"authorName\":\"venkat\"},\"keywords\":[\"some\"]}");
         newsArticleEditorSteps.then_editor_should_be_able_to_update_that_article_successfully();
     }

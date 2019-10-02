@@ -4,7 +4,6 @@ import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.domain.Author
 import com.upday.newsarticle.entity.ArticleEntity
 import com.upday.newsarticle.entity.AuthorEntity
-import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
 @Component
