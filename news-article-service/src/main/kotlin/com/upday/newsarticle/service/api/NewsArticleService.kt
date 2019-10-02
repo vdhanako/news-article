@@ -14,6 +14,8 @@ interface NewsArticleService {
 
     fun createArticle(article: Article) : Article
 
+    fun updateArticle(article: Article) : Article
+
     fun deleteArticle(articleId: Long)
 
 }

@@ -4,6 +4,7 @@ import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.service.api.NewsArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.http.MediaType.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -14,34 +15,40 @@ class NewsArticleController {
     @Autowired
     lateinit var newsArticleService: NewsArticleService
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping(produces = [APPLICATION_JSON_UTF8_VALUE])
     fun getAllArticles() : ResponseEntity<List<Article>> {
-        var articles = newsArticleService.getAllArticles()
-        return ResponseEntity.ok(articles)
+        val response = newsArticleService.getAllArticles()
+        return ResponseEntity.ok(response)
     }
 
-    @GetMapping("/{articleId}", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping("/{articleId}", produces = [APPLICATION_JSON_UTF8_VALUE])
     fun getArticle(@PathVariable("articleId") articleId: Long) : ResponseEntity<Article> {
-        var article = newsArticleService.getArticle(articleId)
-        return ResponseEntity.ok(article)
+        val response = newsArticleService.getArticle(articleId)
+        return ResponseEntity.ok(response)
     }
 
-    @GetMapping("/author/{authorId}", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping("/author/{authorId}", produces = [APPLICATION_JSON_UTF8_VALUE])
     fun getArticleByAuthor(@PathVariable("authorId") authorId: Long) : ResponseEntity<List<Article>> {
-        var articles = newsArticleService.getArticleByAuthor(authorId)
-        return ResponseEntity.ok(articles)
+        val response = newsArticleService.getArticleByAuthor(authorId)
+        return ResponseEntity.ok(response)
     }
 
-    @GetMapping("/keyword/{keyword}", produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @GetMapping("/keyword/{keyword}", produces = [APPLICATION_JSON_UTF8_VALUE])
     fun getArticleByKeyword(@PathVariable("keyword") keyword: String) : ResponseEntity<List<Article>> {
-        var articles = newsArticleService.getArticleByKeyword(keyword)
-        return ResponseEntity.ok(articles)
+        val response = newsArticleService.getArticleByKeyword(keyword)
+        return ResponseEntity.ok(response)
     }
 
-    @PostMapping(consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE], produces = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping(consumes = [APPLICATION_JSON_UTF8_VALUE], produces = [APPLICATION_JSON_UTF8_VALUE])
     fun createArticle(@RequestBody article: Article) : ResponseEntity<Article> {
-        var article = newsArticleService.createArticle(article)
-        return ResponseEntity.ok(article)
+        val response = newsArticleService.createArticle(article)
+        return ResponseEntity.ok(response)
+    }
+
+    @PutMapping(consumes = [APPLICATION_JSON_UTF8_VALUE], produces = [APPLICATION_JSON_UTF8_VALUE])
+    fun updateArticle(@RequestBody article: Article) : ResponseEntity<Article> {
+        val response = newsArticleService.updateArticle(article)
+        return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{articleId}")

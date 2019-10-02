@@ -8,8 +8,8 @@ data class AuthorEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "author_id")
-        var authorId: Long,
+        val authorId: Long,
         @Column(name = "author_name")
-        var authorName: String
+        val authorName: String
 
 )

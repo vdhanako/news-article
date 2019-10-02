@@ -4,13 +4,12 @@ import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.domain.Author
 import com.upday.newsarticle.entity.ArticleEntity
 import com.upday.newsarticle.entity.AuthorEntity
-import com.upday.newsarticle.exception.ArticleNotCreatedException
+import com.upday.newsarticle.exception.ArticleCreationException
 import com.upday.newsarticle.exception.ArticleNotFoundException
 import com.upday.newsarticle.repository.ArticleRepository
 import com.upday.newsarticle.service.api.NewsArticleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class NewsArticleServiceImpl : NewsArticleService {
@@ -19,54 +18,70 @@ class NewsArticleServiceImpl : NewsArticleService {
     lateinit var articleRepository: ArticleRepository
 
     override fun getAllArticles(): List<Article> {
-        var articleEntities = articleRepository.findAll()
-        return articleEntities.map { convertArticleEntity(it) }.toList()
+        val articleEntities = articleRepository.findAll()
+        return articleEntities.map { convertArticleEntity(it) }
     }
 
     override fun getArticle(articleId: Long): Article {
-        var articleEntity = articleRepository.findById(articleId)
+        val articleEntity = articleRepository.findById(articleId)
         if(!articleEntity.isPresent()) {
-            throw ArticleNotFoundException("article with $articleId was not found")
+            throw ArticleNotFoundException("An article with article id $articleId was not found")
         }
         return convertArticleEntity(articleEntity.get())
     }
 
     override fun getArticleByAuthor(authorId: Long): List<Article> {
-        var articleEntities = articleRepository.findByAuthor(authorId)
-        return articleEntities.map { convertArticleEntity(it) }.toList()
+        val articleEntities = articleRepository.findByAuthor(authorId)
+        return articleEntities.map { convertArticleEntity(it) }
     }
 
     override fun getArticleByKeyword(keyword: String): List<Article> {
-        var articleEntities = articleRepository.findByKeyword(keyword)
-        return articleEntities.map { convertArticleEntity(it) }.toList()
+        val articleEntities = articleRepository.findByKeyword(keyword)
+        return articleEntities.map { convertArticleEntity(it) }
     }
 
     override fun createArticle(article: Article): Article {
-        var requestArticleEntity = convertArticle(article)
-        var response = Optional.of(articleRepository.save(requestArticleEntity))
-        if(!response.isPresent) {
-            throw ArticleNotCreatedException("problem occurred when trying to create article")
+        if(doesArticleExist(article)) {
+            throw ArticleCreationException("Unable to create article. An article with article id ${article.articleId} already exist")
         }
-        return convertArticleEntity(response.get());
+        val requestArticleEntity = convertArticle(article)
+        return try {
+            val response: ArticleEntity = articleRepository.save(requestArticleEntity)
+            return convertArticleEntity(response)
+        } catch (e: RuntimeException) {
+            throw ArticleCreationException("Problem occurred when trying to create article")
+        }
+
     }
 
-    override fun deleteArticle(articleId: Long) {
-        var isArticleExist = articleRepository.existsById(articleId)
-        if(!isArticleExist) {
-            throw ArticleNotFoundException("article with $articleId was not found")
+    override fun updateArticle(article: Article): Article {
+        val requestArticleEntity = convertArticle(article)
+        return try {
+            convertArticleEntity(articleRepository.save(requestArticleEntity))
+        } catch (e: RuntimeException) {
+            throw ArticleCreationException("Problem occurred when trying to update article")
         }
-        articleRepository.deleteById(articleId)
+    }
+
+    private fun doesArticleExist(article: Article) = articleRepository.existsById(article.articleId)
+
+    override fun deleteArticle(articleId: Long) {
+        try {
+            articleRepository.deleteById(articleId)
+        } catch (e: RuntimeException) {
+            throw ArticleNotFoundException("Unable to delete article. An article with article id $articleId was not found")
+        }
     }
 
     private fun convertArticleEntity(articleEntity: ArticleEntity) : Article {
-        var author = Author(articleEntity.author.authorId, articleEntity.author.authorName)
+        val author = Author(articleEntity.author.authorId, articleEntity.author.authorName)
 
         return Article(articleEntity.articleId, articleEntity.header, articleEntity.shortDescription,
                 articleEntity.text, articleEntity.publishDate, author, articleEntity.keywords)
     }
 
     private fun convertArticle(article: Article) : ArticleEntity {
-        var authorEntity = AuthorEntity(article.author.authorId, article.author.authorName)
+        val authorEntity = AuthorEntity(article.author.authorId, article.author.authorName)
 
         return ArticleEntity(article.articleId, article.header, article.shortDescription,
                 article.text, article.publishDate, authorEntity, article.keywords)

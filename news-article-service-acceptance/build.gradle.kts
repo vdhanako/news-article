@@ -7,6 +7,7 @@ buildscript {
     }
 }
 
+apply(plugin = "java")
 apply(plugin = "net.serenity-bdd.aggregator")
 
 dependencies {

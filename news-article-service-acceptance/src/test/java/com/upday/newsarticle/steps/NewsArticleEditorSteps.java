@@ -41,7 +41,7 @@ public class NewsArticleEditorSteps {
 
     @Step("When editor tries to update existing article id {1}")
     public Response when_editor_tries_to_update_existing_article(String requestUrl, String requestBody) {
-        return rest().when().header("content-type", "application/json").body(requestBody).post(requestUrl);
+        return rest().when().header("content-type", "application/json").body(requestBody).put(requestUrl);
     }
 
     @Step("Then editor should be able to update that article successfully")

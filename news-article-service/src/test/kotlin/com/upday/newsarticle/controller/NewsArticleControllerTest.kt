@@ -1,13 +1,12 @@
 package com.upday.newsarticle.controller
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.whenever
-import com.upday.newsarticle.controller.advice.ArticleNotCreatedExceptionAdvice
+import com.upday.newsarticle.controller.advice.ArticleNotCreationExceptionAdvice
 import com.upday.newsarticle.controller.advice.ArticleNotFoundExceptionAdvice
 import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.domain.Author
-import com.upday.newsarticle.exception.ArticleNotCreatedException
+import com.upday.newsarticle.exception.ArticleCreationException
 import com.upday.newsarticle.exception.ArticleNotFoundException
 import com.upday.newsarticle.service.api.NewsArticleService
 import org.junit.Before
@@ -49,7 +48,7 @@ class NewsArticleControllerTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(
-                        ArticleNotCreatedExceptionAdvice(),
+                        ArticleNotCreationExceptionAdvice(),
                         ArticleNotFoundExceptionAdvice()).build()
     }
 
@@ -147,11 +146,43 @@ class NewsArticleControllerTest {
 
     @Test
     fun `createArticle should return not found status when unable to create an article`() {
-        whenever(service.createArticle(article)).thenThrow(ArticleNotCreatedException(""))
+        whenever(service.createArticle(article)).thenThrow(ArticleCreationException(""))
 
         var requestJson = objectMapper.writeValueAsString(article)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/article")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `updateArticle should return success status and update an article for an existing article`() {
+        whenever(service.updateArticle(article)).thenReturn(article)
+
+        var requestJson = objectMapper.writeValueAsString(article)
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/article")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("articleId").value(1))
+                .andExpect(jsonPath("header").value("some header"))
+                .andExpect(jsonPath("shortDescription").value("some description"))
+                .andExpect(jsonPath("text").value("some text"))
+                .andExpect(jsonPath("publishDate").exists())
+                .andExpect(jsonPath("author.authorId").value(1))
+                .andExpect(jsonPath("author.authorName").value("some author"))
+                .andExpect(jsonPath("keywords.[0]").value("some"))
+    }
+
+    @Test
+    fun `updateArticle should return not found status when unable to update an article`() {
+        whenever(service.updateArticle(article)).thenThrow(ArticleCreationException(""))
+
+        var requestJson = objectMapper.writeValueAsString(article)
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/article")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))
                 .andExpect(status().isNotFound)

@@ -9,18 +9,18 @@ data class ArticleEntity(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "article_id")
-        var articleId: Long,
+        val articleId: Long,
         @Column(nullable = true)
-        var header: String?,
+        val header: String?,
         @Column(name = "short_description", nullable = true)
-        var shortDescription: String?,
-        var text: String?,
+        val shortDescription: String?,
+        val text: String?,
         @Column(name = "publish_date")
-        var publishDate: Date,
+        val publishDate: Date,
         @ManyToOne
         @JoinColumn(name = "author_id")
-        var author: AuthorEntity,
+        val author: AuthorEntity,
         @ElementCollection
         @Column(name = "keywords", nullable = true)
-        var keywords: MutableSet<String>?
+        val keywords: MutableSet<String>?
 )

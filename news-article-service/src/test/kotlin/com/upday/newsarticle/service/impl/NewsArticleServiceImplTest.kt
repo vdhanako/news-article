@@ -5,6 +5,7 @@ import com.upday.newsarticle.domain.Article
 import com.upday.newsarticle.domain.Author
 import com.upday.newsarticle.entity.ArticleEntity
 import com.upday.newsarticle.entity.AuthorEntity
+import com.upday.newsarticle.exception.ArticleCreationException
 import com.upday.newsarticle.exception.ArticleNotFoundException
 import com.upday.newsarticle.repository.ArticleRepository
 import org.hamcrest.CoreMatchers.*
@@ -126,6 +127,7 @@ class NewsArticleServiceImplTest {
     @Test
     fun `createArticle should create an article`() {
         whenever(repository.save(articleEntity)).thenReturn(articleEntity)
+        whenever(repository.existsById(article.articleId)).thenReturn(false)
 
         var response = service.createArticle(article)
 
@@ -139,24 +141,44 @@ class NewsArticleServiceImplTest {
         assertThat(response.keywords?.first(), `is`(equalTo("some")))
     }
 
-    @Test(expected = ArticleNotFoundException::class)
-    fun `createArticle should throw ArticleNotFoundException when article cannot be created`() {
-        whenever(repository.save(articleEntity)).thenThrow(ArticleNotFoundException("article with 1 was not found"))
+    @Test(expected = ArticleCreationException::class)
+    fun `createArticle should throw ArticleCreationException when an article already exist`() {
+        whenever(repository.existsById(article.articleId)).thenReturn(true)
 
         service.createArticle(article)
     }
 
     @Test
-    fun `deleteArticle should delete an article`() {
-        whenever(repository.existsById(1)).thenReturn(true)
+    fun `updateArticle should update an existing article`() {
+        whenever(repository.save(articleEntity)).thenReturn(articleEntity)
 
+        var response = service.updateArticle(article)
+
+        assertThat(response.articleId, `is`(equalTo(1L)))
+        assertThat(response.header, `is`(equalTo("some header")))
+        assertThat(response.shortDescription, `is`(equalTo("some description")))
+        assertThat(response.text, `is`(equalTo("some text")))
+        assertThat(response.publishDate, `is`(notNullValue()))
+        assertThat(response.author.authorId, `is`(equalTo(1L)))
+        assertThat(response.author.authorName, `is`(equalTo("some author")))
+        assertThat(response.keywords?.first(), `is`(equalTo("some")))
+    }
+
+    @Test(expected = ArticleCreationException::class)
+    fun `updateArticle should throw ArticleCreationException when the article was not updated`() {
+        whenever(repository.save(articleEntity)).thenThrow(RuntimeException())
+
+        service.updateArticle(article)
+    }
+
+    @Test
+    fun `deleteArticle should delete an article`() {
         service.deleteArticle(1)
     }
 
     @Test(expected = ArticleNotFoundException::class)
     fun `deleteArticle should throw ArticleNotFoundException and not delete an article`() {
-        whenever(repository.existsById(1)).thenReturn(false)
-
+        whenever(repository.deleteById(article.articleId)).thenThrow(RuntimeException())
         service.deleteArticle(1)
     }
 
