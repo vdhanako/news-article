@@ -20,6 +20,7 @@ repositories {
 subprojects {
 
 	apply(plugin = "kotlin")
+	apply(plugin = "java")
 
 	group = "com.upday.newsarticle"
 	version = "0.0.1-SNAPSHOT"
