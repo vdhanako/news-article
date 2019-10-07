@@ -34,16 +34,16 @@ class NewsArticleControllerTest {
 
     private lateinit var mockMvc: MockMvc
 
-    private var objectMapper = jacksonObjectMapper()
+    private val objectMapper = jacksonObjectMapper()
 
     private lateinit var articles: List<Article>
     private lateinit var article: Article
 
     @Before
     fun setup() {
-        var date = Date(2019,10,1)
-        var author = Author(1, "some author")
-        var keywords = mutableSetOf("some")
+        val date = Date(2019,10,1)
+        val author = Author(1, "some author")
+        val keywords = mutableSetOf("some")
         article = Article(1, "some header", "some description", "some text", date, author, keywords)
         articles = listOf(article)
 
@@ -145,7 +145,7 @@ class NewsArticleControllerTest {
     fun `createArticle should return success status and create an article for a valid article`() {
         whenever(service.createArticle(article)).thenReturn(article)
 
-        var requestJson = objectMapper.writeValueAsString(article)
+        val requestJson = objectMapper.writeValueAsString(article)
 
         mockMvc.perform(post("/article")
                 .contentType(APPLICATION_JSON)
@@ -165,7 +165,7 @@ class NewsArticleControllerTest {
     fun `createArticle should return not found status when unable to create an article`() {
         whenever(service.createArticle(article)).thenThrow(ArticleCreationException(""))
 
-        var requestJson = objectMapper.writeValueAsString(article)
+        val requestJson = objectMapper.writeValueAsString(article)
 
         mockMvc.perform(post("/article")
                 .contentType(APPLICATION_JSON)
@@ -177,7 +177,7 @@ class NewsArticleControllerTest {
     fun `updateArticle should return success status and update an article for an existing article`() {
         whenever(service.updateArticle(article)).thenReturn(article)
 
-        var requestJson = objectMapper.writeValueAsString(article)
+        val requestJson = objectMapper.writeValueAsString(article)
 
         mockMvc.perform(put("/article")
                 .contentType(APPLICATION_JSON)
@@ -197,7 +197,7 @@ class NewsArticleControllerTest {
     fun `updateArticle should return not found status when unable to update an article`() {
         whenever(service.updateArticle(article)).thenThrow(ArticleCreationException(""))
 
-        var requestJson = objectMapper.writeValueAsString(article)
+        val requestJson = objectMapper.writeValueAsString(article)
 
         mockMvc.perform(put("/article")
                 .contentType(APPLICATION_JSON)
